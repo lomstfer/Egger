@@ -1,6 +1,6 @@
 - Enemies spawn beyond screensize
 - Sprites
-- DRAGON PROTECTING DRAGON EGG AND BREATHES FIRE ON ENEMIES
+- DRAGON PROTECTING DRAGON EGG AND BREATHES FIRE ON ENEMIES or rats, squirrels, snakes, raccoons as enemies and chicken player
 
 - Ask gameTime is ok not having a cap but it will basically be unreachable
 

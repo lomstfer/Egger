@@ -59,11 +59,9 @@ public:
 
     void update(int winW, int winH, double deltaTime, const Uint8 *keys);
 
-	void render(SDL_Texture* texture, SDL_Renderer* renderer);
+	void render(SDL_Texture* textureList [8], SDL_Renderer* renderer);
 
     void resetSpeed();
 
 	void noExplore(int winW, int winH);
-
-	void removeHealth(int amount);
 };
