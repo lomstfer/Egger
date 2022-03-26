@@ -1,7 +1,8 @@
 - Enemies spawn beyond screensize
 - Sprites
+- DRAGON PROTECTING DRAGON EGG AND BREATHES FIRE ON ENEMIES
 
-- Ask gameTime is ok not haveing a cap but it will basically be unreachable
+- Ask gameTime is ok not having a cap but it will basically be unreachable
 
 - Splash screen shows controls
 - Title showing student name, module, number and title

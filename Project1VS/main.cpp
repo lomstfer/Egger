@@ -90,7 +90,7 @@ int main(int argc, char* args[])
 	const Uint8 *keys = SDL_GetKeyboardState(NULL);
 
 	bool menu = true;
-	Text titleText("EGGER", 100, {255, 255, 255, 255}, "assets/CascadiaCode.ttf", winW / 2, 30, true, renderer);
+	Text titleText("EGGER", 100, {255, 255, 255, 255}, "assets/CascadiaCode.ttf", winW / 2, winH/2 - 200, true, renderer);
 
 	Text enterText("ENTER TO START - ESCAPE TO EXIT", 
 				 50, {255, 255, 255, 255}, "assets/CascadiaCode.ttf", winW / 2, winH / 2, true, renderer);
@@ -108,7 +108,6 @@ int main(int argc, char* args[])
 
 	SDL_Texture* enemyTexture = IMG_LoadTexture(renderer, "assets/enemy.png");
 	std::vector<Entity> enemies;
-	Entity enemy(enemyTexture, 8, 8, winW/2 + 300, winH/2 - 100, 16, 16, true);
 	float enemyEggDistance = 0;
 	float eggXdist = 0;
 	float eggYdist = 0;
@@ -116,7 +115,9 @@ int main(int argc, char* args[])
 	float enY = 0;
 	float enSpeedMulti = 1;
 	float enemySpawnTime = 0;
-	int enemyRandomSpawnTime = rand() % 3 + 2;;
+	int enemyRandomSpawnTime = rand() % 3 + 2;
+	int sideX = rand() % 3 - 1;
+	int sideY = rand() % 3 - 1;
 
 	SDL_Texture* plrTexture = IMG_LoadTexture(renderer, "assets/player.png");
 	Player player(plrTexture, winW/2, winH/2 + 200, 32, 32);
@@ -125,9 +126,10 @@ int main(int argc, char* args[])
 	float score = 0;
 	float scoreAdder = 1;
 	Text scoreText(std::to_string(score), 
-				 50, {255, 255, 255, 255}, "assets/CascadiaCode.ttf", 0, 0, false, renderer);
+				 50, {255, 255, 255, 255}, "assets/CascadiaCode.ttf", winW/2, 20, true, renderer);
 
 	float gameTime = 0;
+	bool win = false;
 
 	// program running
 	while (gameRunning)
@@ -169,6 +171,19 @@ int main(int argc, char* args[])
 			pressFText.render();
 			fullScreenText.update();
 			fullScreenText.render();
+			if (score > 0)
+			{
+				scoreText.color = {255, 255, 255, 255};
+				scoreText.text = "HIGHSCORE: " + std::to_string(ftint(score));
+				scoreText.update();
+				if (win)
+				{
+					scoreText.color = {80, 240, 80, 255};
+					scoreText.text = "YOU SUCCESSFULLY PROTECTED THE EGG!";
+					scoreText.update();
+				}
+				scoreText.render();
+			}
 
 			if (keys[SDL_SCANCODE_RETURN])
 			{
@@ -178,12 +193,14 @@ int main(int argc, char* args[])
 				r = 71;
 				g = 209;
 				b = 103;
+				scoreText.color = {255, 255, 255, 255};
 				
 				player.s_x = winW / 2 - player.w / 2;
 				player.s_y = winH / 2 - 200 - player.h / 2;
 				player.speedX = 0;
 				player.speedY = 0;
 				player.angle = 0;
+				player.rotationSpeed = 0;
 				score = 0;
 				scoreAdder = 1;
 				enSpeedMulti = 0;
@@ -256,14 +273,20 @@ int main(int argc, char* args[])
 				}
 			}
 
-			
 			enemySpawnTime += deltaTime;
+			sideX = rand() % 3 - 1;
+			sideY = rand() % 3 - 1;
 			if (enemySpawnTime >= enemyRandomSpawnTime)
 			{
-				enemyRandomSpawnTime = rand() % 3 + 2;
+				enemyRandomSpawnTime = 2;
 				enemySpawnTime = 0;
-				Entity enemy(enemyTexture, 8, 8, rand() % winW, rand() % winH, 16, 16, true);
-				enemies.push_back(enemy);
+				
+				if (sideX != 0 || sideY != 0)
+				{
+					Entity enemy(enemyTexture, 8, 8, winW/2 + rand() % 100 - 50 + (rand() % 300 + 600) * sideX, winH/2 + rand() % 100 - 50 + (rand() % 300 + 400) * sideY, 16, 16, true);
+					enemies.push_back(enemy);
+				}
+					
 			}
 
 			enSpeedMulti += scoreAdder * deltaTime / 10;
@@ -284,6 +307,7 @@ int main(int argc, char* args[])
 						enemies.clear();
 						game = false;
 						menu = true;
+						win = false;
 					}
 				if (collideCenter(player.rect, enemies[i].rect))
 				{
@@ -293,7 +317,7 @@ int main(int argc, char* args[])
 				
 			}
 
-			scoreAdder *= 1.001f;
+			scoreAdder *= 1.0001f;
 			score += scoreAdder * deltaTime;
 			scoreText.text = std::to_string(ftint(score));
 			scoreText.update();
@@ -302,6 +326,13 @@ int main(int argc, char* args[])
 
 			updateNow = SDL_GetTicks();
 			updateTime = updateNow - updateLast;
+
+			if (gameTime >= 60)
+			{
+				win = true;
+				game = false;
+				menu = true;
+			}
 
 			// RENDER
 			renderLast = SDL_GetTicks();
@@ -317,9 +348,9 @@ int main(int argc, char* args[])
 
 			renderNow = SDL_GetTicks();
 			renderTime = renderNow - renderLast;
-
+			
 			std::cout << "INPUT: " + std::to_string(ftint(inputTime)) + " | UPDATE: " + std::to_string(ftint(updateTime)) + " | RENDER: " + std::to_string(ftint(renderTime)) + " (TICKS)" << std::endl;
-			}
+		}
 	}	
 	SDL_DestroyWindow(window);
 	SDL_Quit();
