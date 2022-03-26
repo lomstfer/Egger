@@ -1,0 +1,11 @@
+- Enemies spawn beyond screensize
+- Sprites
+
+- Ask gameTime is ok not haveing a cap but it will basically be unreachable
+
+- Splash screen shows controls
+- Title showing student name, module, number and title
+- Transparency effects with sprites
+- Background audio sound + 3 sound effects
+- Timer that when runs out stops the game?
+- TXT log file generated
