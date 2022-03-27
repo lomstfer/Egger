@@ -189,15 +189,16 @@ int main(int argc, char* args[])
 
 			if (ftint(score) > ftint(highscore))
 			{
-				highscore = score + 1;
-				scoreText.text = "NEW HIGHSCORE: " + std::to_string(ftint(highscore - 1));
+				highscore = score - 1;
+				scoreText.text = "NEW HIGHSCORE: " + std::to_string(ftint(highscore + 1));
+				if (keys[SDL_SCANCODE_RETURN])
+					highscore += 1;
 			}
-			else
+			if (ftint(score) < ftint(highscore))
 			{
 				scoreText.text = "HIGHSCORE: " + std::to_string(ftint(highscore));
 			}
-				
-			scoreText.color = {255, 255, 255, 255};
+			
 			scoreText.update();
 			scoreText.render();
 			if (keys[SDL_SCANCODE_RETURN])
@@ -293,7 +294,7 @@ int main(int argc, char* args[])
 			enemySpawnTime += deltaTime;
 			sideX = rand() % 3 - 1;
 			sideY = rand() % 3 - 1;
-			if (enemySpawnTime >= enemyRandomSpawnTime && gameTime < 55)
+			if (enemySpawnTime >= enemyRandomSpawnTime && gameTime < 50)
 			{
 				enemyRandomSpawnTime = 2;
 				enemySpawnTime = 0;
@@ -347,9 +348,6 @@ int main(int argc, char* args[])
 			player.update(winW, winH, deltaTime, keys);
 			player.noExplore(winW, winH);
 
-			updateNow = SDL_GetTicks();
-			updateTime = updateNow - updateLast;
-
 			if (gameTime >= 60)
 			{
 				enemies.clear();
@@ -357,6 +355,9 @@ int main(int argc, char* args[])
 				game = false;
 				menu = true;
 			}
+
+			updateNow = SDL_GetTicks();
+			updateTime = updateNow - updateLast;
 
 			// RENDER
 			renderLast = SDL_GetTicks();

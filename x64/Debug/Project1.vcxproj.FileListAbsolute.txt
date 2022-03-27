@@ -1,1 +1,2 @@
 C:\programmeringosv\fiverr\Project1\x64\Debug\Project1.exe
+C:\Fiverr\x64\Debug\Project1.exe
