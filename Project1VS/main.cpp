@@ -137,9 +137,10 @@ int main(int argc, char* args[])
 	float colSpeed = 1;
 
 	float score = 0;
+	float highscore = 0;
 	float scoreAdder = 1;
-	Text scoreText(std::to_string(score), 
-				 50, {255, 255, 255, 255}, "assets/CascadiaCode.ttf", winW/2, 20, true, renderer);
+	Text scoreText("HIGHSCORE: " + std::to_string(ftint(score)), 
+				   50, {255, 255, 255, 255}, "assets/CascadiaCode.ttf", winW/2, 20, true, renderer);
 
 	float gameTime = 0;
 	bool win = false;
@@ -184,20 +185,20 @@ int main(int argc, char* args[])
 			pressFText.render();
 			fullScreenText.update();
 			fullScreenText.render();
-			if (score > 0)
-			{
-				scoreText.color = {255, 255, 255, 255};
-				scoreText.text = "HIGHSCORE: " + std::to_string(ftint(score));
-				scoreText.update();
-				/* if (win)
-				{
-					scoreText.color = {80, 240, 80, 255};
-					scoreText.text = "YOU SUCCESSFULLY PROTECTED THE EGG!";
-					scoreText.update();
-				} */
-				scoreText.render();
-			}
 
+			if (ftint(score) > ftint(highscore))
+			{
+				highscore = score + 1;
+				scoreText.text = "NEW HIGHSCORE: " + std::to_string(ftint(highscore - 1));
+			}
+			else
+			{
+				scoreText.text = "HIGHSCORE: " + std::to_string(ftint(highscore));
+			}
+				
+			scoreText.color = {255, 255, 255, 255};
+			scoreText.update();
+			scoreText.render();
 			if (keys[SDL_SCANCODE_RETURN])
 			{
 				menu = false;
@@ -342,6 +343,7 @@ int main(int argc, char* args[])
 
 			scoreText.text = std::to_string(ftint(score));
 			scoreText.update();
+			
 			player.update(winW, winH, deltaTime, keys);
 			player.noExplore(winW, winH);
 

@@ -128,32 +128,24 @@ void Player::noExplore(int winW, int winH)
 	// left stop
 	if (s_x + rect.w/4 <= 0)
 	{
-		x = 0 - rect.w/4;
-		s_x = x;
-		speedX *= -1;
+		s_x = 0 - rect.w/4;
 	}
 
 	// right stop
 	if (s_x + rect.w - rect.w/4 >= winW)
 	{
-		x = winW - rect.h + rect.w/4;
-		s_x = x;
-		speedX *= -1;
+		s_x = winW - rect.w + rect.w/4;
 	}
 
 	// up stop
 	if (s_y + rect.h/4 <= 0)
 	{
-		y = 0 - rect.h/4;
-		s_y = y;
-		speedY *= -1;
+		s_y = 0 - rect.h/4;
 	}
 
 	// down stop
 	if (s_y + rect.h - rect.h/4 >= winH )
 	{
-		y = winH - rect.h + rect.h/4;
-		s_y = y;
-		speedY *= -1;
+		s_y = winH - rect.h + rect.h/4;
 	}
 }

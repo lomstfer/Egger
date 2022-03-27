@@ -20,7 +20,7 @@
     dstRect.h = h;
 } */
 
-Player::Player(SDL_Texture *ptex, int px, int py, float pw, float ph, float windowScale)
+Player::Player(SDL_Texture *ptex, int px, int py, float pw, float ph)
 {
     tex = ptex;
     w = pw;
@@ -30,8 +30,8 @@ Player::Player(SDL_Texture *ptex, int px, int py, float pw, float ph, float wind
 	
 	srcRect.x = 0;
 	srcRect.y = 0;
-	srcRect.w = 10;
-	srcRect.h = 10;
+	srcRect.w = 8;
+	srcRect.h = 12;
 
     rect.x = ftint(x);
     rect.y = ftint(y);
@@ -40,19 +40,20 @@ Player::Player(SDL_Texture *ptex, int px, int py, float pw, float ph, float wind
 
 	scale = 0;
 
-	// the simulated position 
-	s_posX = x;
-	s_posY = y;
+	// the simulated position
+	s_x = x;
+	s_y = y;
 
     currentFrame = 0;
+	animationSpeed = 10.0f;
 
-    speed = 0.15f * windowScale;
+    speed = 300.0f;
+	rotSpeed = 2000.0f;
 	speedP = speed;
 	rotationForce = 0.05f;
-	animationSpeed = 0.07f;
 	speedX = 0.0f;
 	speedY = 0.0f;
-    damp = 0.98f;
+    damp = 0.001;
     angle = 0.0f;
 	angleRadians = angle * M_PI / 180;
 
@@ -72,13 +73,48 @@ Player::Player(SDL_Texture *ptex, int px, int py, float pw, float ph, float wind
 
 void Player::update(int winW, int winH, double deltaTime, const Uint8 *keys)
 {
+	Time += deltaTime / 100.0f;
+    // make the current position the last simulated position, 
+    // simulated used to prevent light/small tunneling but does not prevent tunneling 
+    x = s_x;
+    y = s_y;
 
+	if (currentFrame > 7)
+	{
+		currentFrame = 0;
+	}
+
+	// slow down x speed
+	speedX *= pow(damp, deltaTime);
+	if (fabsf(speedX) < 0.1)
+	{
+		speedX = 0;
+	}
+
+	// slow down y speed
+	speedY *= pow(damp, deltaTime);
+	if (fabsf(speedY) < 0.1)
+	{
+		speedY = 0;
+	}
+
+	angle += rotationSpeed * deltaTime;
+	rotationSpeed *= pow(damp, deltaTime);
+	if (fabsf(rotationSpeed) < 0.1)
+	{
+		rotationSpeed = 0;
+	}
+
+	// add values to simulated position
+	s_x += speedX * deltaTime;
+	s_y += speedY * deltaTime;
+	rect.x = x;
+	rect.y = y;
 }
 
-void Player::draw(SDL_Texture* TList [9], SDL_Renderer* renderer)
+void Player::render(SDL_Texture* textureList [8], SDL_Renderer* renderer)
 {
-	tex = TList[int(currentFrame)];
-	SDL_SetTextureAlphaMod(tex, alpha);
+	tex = textureList[ftint(currentFrame)];
 	SDL_RenderCopyEx(renderer, tex, &srcRect, &rect, angle, NULL, SDL_FLIP_NONE);
 }
 
@@ -90,39 +126,26 @@ void Player::resetSpeed()
 void Player::noExplore(int winW, int winH)
 {
 	// left stop
-	if (s_posX + rect.w/4 <= 0)
+	if (s_x + rect.w/4 <= 0)
 	{
-		x = 0 - rect.w/4;
-		s_posX = x;
-		speedX *= -1;
+		s_x = 0 - rect.w/4;
 	}
 
 	// right stop
-	if (s_posX + rect.w - rect.w/4 >= winW)
+	if (s_x + rect.w - rect.w/4 >= winW)
 	{
-		x = winW - rect.h + rect.w/4;
-		s_posX = x;
-		speedX *= -1;
+		s_x = winW - rect.w + rect.w/4;
 	}
 
 	// up stop
-	if (s_posY + rect.h/4 <= 0)
+	if (s_y + rect.h/4 <= 0)
 	{
-		y = 0 - rect.h/4;
-		s_posY = y;
-		speedY *= -1;
+		s_y = 0 - rect.h/4;
 	}
 
 	// down stop
-	if (s_posY + rect.h - rect.h/4 >= winH )
+	if (s_y + rect.h - rect.h/4 >= winH )
 	{
-		y = winH - rect.h + rect.h/4;
-		s_posY = y;
-		speedY *= -1;
+		s_y = winH - rect.h + rect.h/4;
 	}
-}
-
-void Player::removeHealth(int amount)
-{
-	alpha -= amount;
 }

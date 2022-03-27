@@ -6,31 +6,27 @@
 #include <string>
 #include <stdlib.h>
 #include <math.h>
-#include <algorithm>
 
+#include "Player.hpp"
 #include "Entity.hpp"
 #include "Text.hpp"
+#include "Ftint.hpp"
+
 
 #define Log(x) std::cout << x << std::endl;
 
-void ifquit(bool &level, bool &gameRunning, SDL_Event &event, SDL_Window* window)
+void ifquit(bool &game, bool &gameRunning, SDL_Event &event, SDL_Window* window)
 {
 	if (event.type == SDL_QUIT)
 	{
 		gameRunning = false;
-		level = false;
-		// idk, kills the game
-		SDL_DestroyWindow(window);
-		SDL_Quit();
+		game = false;
 	}
 
 	if (event.key.keysym.sym == SDLK_ESCAPE)
 	{
 		gameRunning = false;
-		level = false;
-		// idk, kills the game
-		SDL_DestroyWindow(window);
-		SDL_Quit();
+		game = false;
 	}
 }
 
@@ -61,6 +57,20 @@ int main(int argc, char* args[])
 	Uint64 deltaLast = 0;
 	double deltaTime = 0;
 
+	Uint64 inputNow = SDL_GetPerformanceCounter();
+	Uint64 inputLast = 0;
+	double inputTime = 0;
+
+	Uint64 updateNow = SDL_GetPerformanceCounter();
+	Uint64 updateLast = 0;
+	double updateTime = 0;
+
+	Uint64 renderNow = SDL_GetPerformanceCounter();
+	Uint64 renderLast = 0;
+	double renderTime = 0;
+
+	int updateElementLogs = 0;
+
 	// init SDL
 	SDL_Init(SDL_INIT_VIDEO);
 	IMG_Init(IMG_INIT_PNG);
@@ -82,9 +92,9 @@ int main(int argc, char* args[])
 	const Uint8 *keys = SDL_GetKeyboardState(NULL);
 
 	bool menu = true;
-	Text titleText("EGGER", 100, {255, 255, 255, 255}, "assets/CascadiaCode.ttf", winW / 2, 30, true, renderer);
+	Text titleText("EGGER", 100, {255, 255, 255, 255}, "assets/CascadiaCode.ttf", winW / 2, winH/2 - 200, true, renderer);
 
-	Text enterText("ENTER TO START", 
+	Text enterText("ENTER TO START - ESCAPE TO EXIT", 
 				 50, {255, 255, 255, 255}, "assets/CascadiaCode.ttf", winW / 2, winH / 2, true, renderer);
 	Text fullScreenText("FULLSCREEN ON", 
 				 50, {255, 255, 255, 255}, "assets/CascadiaCode.ttf", winW / 2, winH / 2 - 40, true, renderer);
@@ -99,45 +109,46 @@ int main(int argc, char* args[])
 	Entity egg(eggTexture, 16, 16, winW/2, winH/2, 64, 64, true);
 
 	SDL_Texture* enemyTexture = IMG_LoadTexture(renderer, "assets/enemy.png");
-	Entity enemy(enemyTexture, 8, 8, winW/2 + 300, winH/2 - 100, 16, 16, true);
+	std::vector<Entity> enemies;
 	float enemyEggDistance = 0;
 	float eggXdist = 0;
 	float eggYdist = 0;
-	float enX = 0;
-	float enY = 0;
+	float enSpeedX = 0;
+	float enSpeedY = 0;
+	float enSpeedMulti = 1;
+	float enemySpawnTime = 0;
+	int enemyRandomSpawnTime = 1;
+	int sideX = rand() % 3 - 1;
+	int sideY = rand() % 3 - 1;
+	float enLastX = 0;
+	float enLastY = 0;
 
-	SDL_Texture* plrTexture = IMG_LoadTexture(renderer, "assets/player.png");
-	bool flip = false;
-    bool flipv = false;
-    float angle = 0;
+	SDL_Texture* henTex0 = IMG_LoadTexture(renderer, "assets/hen0.png");
+	SDL_Texture* henTex1 = IMG_LoadTexture(renderer, "assets/hen1.png");
+	SDL_Texture* henTex2 = IMG_LoadTexture(renderer, "assets/hen2.png");
+	SDL_Texture* henTex3 = IMG_LoadTexture(renderer, "assets/hen3.png");
+	SDL_Texture* henTex4 = IMG_LoadTexture(renderer, "assets/hen4.png");
+	SDL_Texture* henTex5 = IMG_LoadTexture(renderer, "assets/hen5.png");
+	SDL_Texture* henTex6 = IMG_LoadTexture(renderer, "assets/hen6.png");
+	SDL_Texture* henTex7 = IMG_LoadTexture(renderer, "assets/hen7.png");
+	SDL_Texture* henTexList [8] = {henTex0, henTex1, henTex2, henTex3, henTex4, henTex5, henTex6 ,henTex7};
+	Player player(henTex0, winW/2, winH/2 + 200, 32, 48);
 
-	SDL_Rect plrSrc;
-	plrSrc.x = 0;
-	plrSrc.y = 0;
-	plrSrc.w = 8;
-	plrSrc.h = 8;
-
-	SDL_Rect plr;
-	plr.w = 32;
-	plr.h = 32;
-	plr.x = winW / 2 - plr.w / 2;
-	plr.y = winH / 2 - 200 - plr.h / 2;
-	
-	int speed = 1;
-	float damp = 0.96;
-	float speedX = 0;
-	float speedY = 0;
 	float colSpeed = 1;
-	
-	float plrX = plr.x;
-	float plrY = plr.y;
-	float s_plrX = plr.x;
-	float s_plrY = plr.y;
 
+	float score = 0;
+	float highscore = 0;
+	float scoreAdder = 1;
+	Text scoreText("HIGHSCORE: " + std::to_string(ftint(score)), 
+				   50, {255, 255, 255, 255}, "assets/CascadiaCode.ttf", winW/2, 20, true, renderer);
 
-	// game loop
+	float gameTime = 0;
+	bool win = false;
+
+	// program running
 	while (gameRunning)
 	{
+		// menu loop
 		while (menu)
 		{
 			deltaLast = deltaNow;
@@ -161,14 +172,13 @@ int main(int argc, char* args[])
 			{
 				fullScreenText.text = "FULLSCREEN ON";
 				SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-				SDL_RenderSetLogicalSize(renderer, winW, winH);
 			}
 			if (fullscreenMode == 1)
 			{
 				fullScreenText.text = "FULLSCREEN OFF";
 				SDL_SetWindowFullscreen(window, SDL_WINDOW_SHOWN);
-				SDL_RenderSetLogicalSize(renderer, winW, winH);
 			}
+
 			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 			SDL_RenderClear(renderer);
 			titleText.render();
@@ -177,211 +187,198 @@ int main(int argc, char* args[])
 			fullScreenText.update();
 			fullScreenText.render();
 
+			if (ftint(score) > ftint(highscore))
+			{
+				highscore = score + 1;
+				scoreText.text = "NEW HIGHSCORE: " + std::to_string(ftint(highscore - 1));
+			}
+			else
+			{
+				scoreText.text = "HIGHSCORE: " + std::to_string(ftint(highscore));
+			}
+				
+			scoreText.color = {255, 255, 255, 255};
+			scoreText.update();
+			scoreText.render();
 			if (keys[SDL_SCANCODE_RETURN])
 			{
 				menu = false;
 				game = true;
+				gameTime = 0;
 				r = 71;
 				g = 209;
 				b = 103;
-
-				enemy.x = rand() % winW;
-				enemy.y = rand() % winH;
-				s_plrX = winW / 2 - plr.w / 2;
-				s_plrY = winH / 2 - 200 - plr.h / 2;
-				speedX = 0;
-				speedY = 0;
+				scoreText.color = {255, 255, 255, 255};
+				
+				player.s_x = winW / 2 - player.w / 2;
+				player.s_y = winH / 2 - 200 - player.h / 2;
+				player.speedX = 0;
+				player.speedY = 0;
+				player.angle = 0;
+				player.rotationSpeed = 0;
+				score = 0;
+				scoreAdder = 1;
+				enSpeedMulti = 0;
 			}
 
-			// presents everything
 			SDL_RenderPresent(renderer);
 		}
 
+		// game running
 		while (game)
 		{
 			deltaLast = deltaNow;
 			deltaNow = SDL_GetPerformanceCounter();
-			deltaTime = (double)(deltaNow - deltaLast) * 100 / (double)SDL_GetPerformanceFrequency();
+			deltaTime = (double)(deltaNow - deltaLast) / (double)SDL_GetPerformanceFrequency();
+			gameTime += deltaTime;
+
+			// INPUT
+			inputLast = SDL_GetTicks();
 			while (SDL_PollEvent(&event))
 			{
 				ifquit(game, gameRunning, event, window);
 			}
 
-			const Uint8 *keys = SDL_GetKeyboardState(NULL);
-
-			{plrX = s_plrX;
-			plrY = s_plrY;
-			{
-			// Events
-			while (SDL_PollEvent(&event))
-			{
-				if (event.type == SDL_QUIT)
-					gameRunning = false;
-			}
-
 			if (keys[SDL_SCANCODE_UP])
 			{
-				speedY = -speed;
-				angle = 0;
-			}
+				player.currentFrame += player.animationSpeed * deltaTime;
+				player.angleRadians = player.angle * M_PI / 180;
 
-			if (keys[SDL_SCANCODE_DOWN])
-			{
-				speedY = speed;
-				angle = 180;
+				player.speedY = -cos(player.angleRadians) * player.speed;
+				player.speedX = sin(player.angleRadians) * player.speed;
 			}
-			
+			else
+				player.currentFrame = 0;
+
 			if (keys[SDL_SCANCODE_LEFT])
 			{
-				speedX = -speed;
-				flip = false;
-				angle = 270;
+				player.rotationSpeed += -deltaTime * player.rotSpeed;
 			}
 
 			if (keys[SDL_SCANCODE_RIGHT])
 			{
-				speedX = speed;
-				flip = true;
-				angle = 90;
+				player.rotationSpeed += deltaTime * player.rotSpeed;
+			}
+			inputNow = SDL_GetTicks();
+			inputTime = inputNow - inputLast;
+
+			// UPDATE
+			updateLast = SDL_GetTicks();
+			while (player.s_x + player.w > egg.x + 10 &&
+				player.s_x < egg.x + egg.w - 10 &&
+				player.s_y + player.h > egg.y + 10 &&
+				player.s_y < egg.y + egg.h - 10)
+			{
+				if (player.x > egg.x + egg.w - 10)
+				{
+					player.s_x += colSpeed;
+				}
+				
+				else if (player.x + player.w < egg.x + 10)
+				{
+					player.s_x -= colSpeed;
+				}
+				
+				if (player.y > egg.y + egg.h - 10)
+				{
+					player.s_y += colSpeed;
+				}
+
+				else if (player.y < egg.y + 10)
+				{
+					player.s_y -= colSpeed;
+				}
 			}
 
-			if (keys[SDL_SCANCODE_UP] && keys[SDL_SCANCODE_LEFT])
+			enemySpawnTime += deltaTime;
+			sideX = rand() % 3 - 1;
+			sideY = rand() % 3 - 1;
+			if (enemySpawnTime >= enemyRandomSpawnTime && gameTime < 55)
 			{
-				speedY = -speed * (1/sqrt(2));
-				speedX = -speed * (1/sqrt(2));
-				angle = 315;
-			}
-
-			if (keys[SDL_SCANCODE_UP] && keys[SDL_SCANCODE_RIGHT])
-			{
-				speedY = -speed * (1/sqrt(2));
-				speedX = speed * (1/sqrt(2));
-				angle = 45;
-			}
-
-			if (keys[SDL_SCANCODE_DOWN] && keys[SDL_SCANCODE_LEFT])
-			{
-				speedY = speed * (1/sqrt(2));
-				speedX = -speed * (1/sqrt(2));
-				angle = 225;
-			}
-
-			if (keys[SDL_SCANCODE_DOWN] && keys[SDL_SCANCODE_RIGHT])
-			{
-				speedY = speed * (1/sqrt(2));
-				speedX = speed * (1/sqrt(2));
-				angle = 135;
+				enemyRandomSpawnTime = 2;
+				enemySpawnTime = 0;
+				
+				// so that enemies will not spawn on the egg
+				if (sideX != 0 || sideY != 0)
+				{
+					// emplace back only takes the arguments for the type of which it holds
+					enemies.emplace_back(enemyTexture, 8, 8, winW / 2 + rand() % 100 - 50 + (rand() % 300 + 600) * sideX, winH / 2 + rand() % 100 - 50 + (rand() % 300 + 400) * sideY, 16, 16, true);
+				}
 			}
 			
-			// left stop
-			if (s_plrX <= 0)
+			enSpeedMulti += scoreAdder * deltaTime / 10;
+			if (enemies.size() > 0)
 			{
-				plrX = 0;
-				s_plrX = plrX;
-			}
-
-			// right stop
-			if (s_plrX + plr.w >= winW)
-			{
-				plrX = winW - plr.h;
-				s_plrX = plrX;
-			}
-
-			// up stop
-			if (s_plrY <= 0)
-			{
-				plrY = 0;
-				s_plrY = plrY;
-
-			}
-			// down stop
-			if (s_plrY >= winH - plr.h)
-			{
-				plrY = winH - plr.h;
-				s_plrY = plrY;
-			}
-
-			// slow down x speed
-			speedX *= pow(damp, deltaTime);
-			if (abs(speedX) < 0.1)
-			{
-				speedX = 0;
-			}
-
-			// slow down y speed
-			speedY *= pow(damp, deltaTime);
-			if (abs(speedY) < 0.1)
-			{
-				speedY = 0;
-			}
-			}
-			// add values to simulated position
-			s_plrX += speedX * deltaTime;
-			s_plrY += speedY * deltaTime;
-			plr.x = plrX;
-			plr.y = plrY;}
-
-			while (s_plrX + plr.w > egg.x + 10 &&
-				s_plrX < egg.x + egg.w - 10 &&
-				s_plrY + plr.h > egg.y + 10 &&
-				s_plrY < egg.y + egg.h - 10)
-			{
-				if (plrX > egg.x + egg.w - 10)
+				for (unsigned int i = 0; i < enemies.size(); i++)
 				{
-					s_plrX += colSpeed;
-				}
-				
-				else if (plrX < egg.x + 10)
-				{
-					s_plrX -= colSpeed;
-				}
-				
-				if (plrY > egg.y + egg.h - 10)
-				{
-					s_plrY += colSpeed;
-				}
+					eggXdist = enemies[i].cx - egg.cx;
+					eggYdist = enemies[i].cy - egg.cy;
+					enemyEggDistance = sqrt(pow(eggXdist, 2) + pow(eggYdist, 2));
+					enSpeedX = eggXdist / enemyEggDistance;
+					enSpeedY = eggYdist / enemyEggDistance;
+					enemies[i].x -= enSpeedX * deltaTime * 30 * enSpeedMulti;
+					enemies[i].y -= enSpeedY * deltaTime * 30 * enSpeedMulti;
+					enemies[i].moveUpdate();
 
-				else if (plrY < egg.y + 10)
-				{
-					s_plrY -= colSpeed;
+					if (enemies[i].cx > egg.x &&
+						enemies[i].cx < egg.x + egg.w &&
+						enemies[i].cy > egg.y &&
+						enemies[i].cy < egg.y + egg.h)
+					{
+						enemies.erase(enemies.begin() + i);
+						score -= 20;
+					}
+					else if (collideCenter(player.rect, enemies[i].rect))
+					{
+						enemies.erase(enemies.begin() + i);
+						score += 10;
+					}
 				}
 			}
 
-			Log(enemy.cx);
-			eggXdist = enemy.cx - egg.cx;
-			eggYdist = enemy.cy - egg.cy;
-			enemyEggDistance = sqrt(pow(eggXdist, 2) + pow(eggYdist, 2));
-			enX = eggXdist / enemyEggDistance;
-			enY = eggYdist / enemyEggDistance;
-			enemy.x -= enX * deltaTime * 1;
-			enemy.y -= enY * deltaTime * 1;
-			if (enemy.cx > egg.x &&
-				enemy.cx < egg.x + egg.w &&
-				enemy.cy > egg.y &&
-				enemy.cy < egg.y + egg.h)
-				{
-					game = false;
-					menu = true;
-				}
-			enemy.moveUpdate();
+			scoreAdder *= 1.0001f;
+			score += scoreAdder * deltaTime;
 
+			if (score < 0)
+			{
+				score = 0;
+			}
+
+			scoreText.text = std::to_string(ftint(score));
+			scoreText.update();
+			
+			player.update(winW, winH, deltaTime, keys);
+			player.noExplore(winW, winH);
+
+			updateNow = SDL_GetTicks();
+			updateTime = updateNow - updateLast;
+
+			if (gameTime >= 60)
+			{
+				enemies.clear();
+				win = true;
+				game = false;
+				menu = true;
+			}
+
+			// RENDER
+			renderLast = SDL_GetTicks();
 			SDL_SetRenderDrawColor(renderer, r, g, b, 255);
 			SDL_RenderClear(renderer);
-			
-			
-			egg.draw(renderer);
-			enemy.draw(renderer);
-			if (flip)
-				SDL_RenderCopyEx(renderer, plrTexture, &plrSrc, &plr, 0, NULL, SDL_FLIP_HORIZONTAL);
-			if (!flip)
-				SDL_RenderCopy(renderer, plrTexture, &plrSrc, &plr);
-			/* if (flipv)
-				SDL_RenderCopyEx(renderer, plrTexture, &plrSrc, &plr, 0, NULL, SDL_FLIP_VERTICAL);
-			if (!flipv)
-				SDL_RenderCopy(renderer, plrTexture, &plrSrc, &plr);*/
+			for (unsigned int i = 0; i < enemies.size(); i++)
+				enemies[i].render(renderer);
+			player.render(henTexList, renderer);
+			egg.render(renderer);
+			scoreText.render();
 			SDL_RenderPresent(renderer);
-			}
-	}	
+
+			renderNow = SDL_GetTicks();
+			renderTime = renderNow - renderLast;
+			updateElementLogs += 1;
+			if (updateElementLogs % 10 == 0)
+				std::cout << "INPUT: " + std::to_string(ftint(inputTime)) + " | UPDATE: " + std::to_string(ftint(updateTime)) + " | RENDER: " + std::to_string(ftint(renderTime)) + " (TICKS)" << std::endl;
+		}
+	}
 	SDL_DestroyWindow(window);
 	SDL_Quit();
 

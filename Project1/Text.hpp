@@ -11,6 +11,7 @@ public:
     std::string fontpath;
     int x;
     int y;
+    bool centered;
     SDL_Renderer* renderer;
     std::string text;
     TTF_Font* font;

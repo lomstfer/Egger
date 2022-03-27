@@ -18,12 +18,11 @@ public:
     float speedX;
     float speedY;
 
-
     Entity(SDL_Texture* texture, int source_width, int source_height, float position_x, float position_y, int width, int height, bool centered);
 
     Entity() = default;
 
-    void draw(SDL_Renderer* renderer);
+    void render(SDL_Renderer* renderer);
 
     void update();
 

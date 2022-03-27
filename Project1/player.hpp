@@ -13,6 +13,8 @@ public:
     float y;
     float w;
     float h;
+	float s_x;
+	float s_y;
 
 	SDL_Rect srcRect;
     SDL_Rect rect;
@@ -31,15 +33,6 @@ public:
 
     float angle;
 	float angleRadians;
-	
-	/* the simulated position and the other, 
-	used with variables instead of just plr.x
-	because plr.x acts wierd (maybe it 
-	gets rounded) */
-	float s_posX;
-	float s_posY;
-	float posX;
-	float posY;
 
 	// speed calculation things
 	float posnow;
@@ -47,6 +40,7 @@ public:
 	float speedo;
 
 	// used to be able of slowing down the rotationspeed to make a smoothing
+	float rotSpeed;
 	float rotationSpeed;
 
     // used to go to the last frame when up key is released
@@ -59,17 +53,15 @@ public:
 
 	double Time;
 
-    Player(SDL_Texture *ptex, int px, int py, float pw, float ph, float windowScale);
+    Player(SDL_Texture *ptex, int px, int py, float pw, float ph);
 
 	Player() = default;
 
     void update(int winW, int winH, double deltaTime, const Uint8 *keys);
 
-	void draw(SDL_Texture* TList [9], SDL_Renderer* renderer);
+	void render(SDL_Texture* textureList [8], SDL_Renderer* renderer);
 
     void resetSpeed();
 
 	void noExplore(int winW, int winH);
-
-	void removeHealth(int amount);
 };

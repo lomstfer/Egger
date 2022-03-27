@@ -32,7 +32,7 @@ Entity::Entity(SDL_Texture* texture, int source_width, int source_height, float 
     rect.h = ftint(h);
 }
 
-void Entity::draw(SDL_Renderer* renderer)
+void Entity::render(SDL_Renderer* renderer)
 {
     SDL_RenderCopy(renderer, tex, &srcRect, &rect);
 }

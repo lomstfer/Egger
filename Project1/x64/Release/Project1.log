@@ -1,0 +1,47 @@
+﻿  entity.cpp
+C:\programmeringosv\fiverr\Project1\entity.cpp(14,9): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\entity.cpp(15,9): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  ftint.cpp
+  main.cpp
+C:\programmeringosv\fiverr\Project1\main.cpp(109,45): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(109,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(233,16): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(244,50): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(245,47): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(255,40): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(260,39): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(263,25): warning C4244: '=': conversion from 'Uint64' to 'double', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(293,22): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(303,125): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(303,66): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(309,43): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(314,28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(317,47): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(318,47): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(337,24): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(351,27): warning C4244: '=': conversion from 'Uint64' to 'double', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(373,27): warning C4244: '=': conversion from 'Uint64' to 'double', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(376,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(376,102): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(376,154): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  Player.cpp
+C:\programmeringosv\fiverr\Project1\Player.cpp(56,17): warning C4305: '=': truncation from 'double' to 'float'
+C:\programmeringosv\fiverr\Project1\Player.cpp(58,30): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\Player.cpp(88,15): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\Player.cpp(95,15): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\Player.cpp(101,25): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\Player.cpp(102,22): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\Player.cpp(109,16): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\Player.cpp(110,16): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\Player.cpp(111,11): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\programmeringosv\fiverr\Project1\Player.cpp(112,11): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\programmeringosv\fiverr\Project1\Player.cpp(131,11): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\Player.cpp(137,23): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\Player.cpp(143,11): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\Player.cpp(149,23): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  text.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 209 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Project1.vcxproj -> C:\programmeringosv\fiverr\Project1\x64\Release\Project1.exe
