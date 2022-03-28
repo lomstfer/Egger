@@ -48,7 +48,7 @@ Player::Player(SDL_Texture *ptex, int px, int py, float pw, float ph)
 	animationSpeed = 10.0f;
 
     speed = 300.0f;
-	rotSpeed = 2000.0f;
+	rotSpeed = 1500.0f;
 	speedP = speed;
 	rotationForce = 0.05f;
 	speedX = 0.0f;

@@ -17,6 +17,8 @@ public:
     float speed;
     float speedX;
     float speedY;
+    float alpha;
+    float angle;
 
     Entity(SDL_Texture* texture, int source_width, int source_height, float position_x, float position_y, int width, int height, bool centered);
 
