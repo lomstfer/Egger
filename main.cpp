@@ -134,7 +134,7 @@ int main(int argc, char* args[])
 	SDL_Texture* henTexList [8] = {henTex0, henTex1, henTex2, henTex3, henTex4, henTex5, henTex6 ,henTex7};
 	Player player(henTex0, winW/2, winH/2 + 200, 32, 48);
 
-	SDL_Texture* henFeetTex = IMG_LoadTexture(renderer, "assets/henfoot.png");
+	SDL_Texture* henFeetTex = IMG_LoadTexture(renderer, "assets/henfoot1.png");
 	std::vector<Entity> feet;
 	float feetTime = 0;
 	float feetSpeed = 1;
@@ -149,6 +149,8 @@ int main(int argc, char* args[])
 
 	float gameTime = 0;
 	bool win = false;
+
+	int henFeetRightLeft = rand() % 2;
 
 	// program running
 	while (gameRunning)
@@ -275,24 +277,24 @@ int main(int argc, char* args[])
 				player.s_y + player.h > egg.y + 10 &&
 				player.s_y < egg.y + egg.h - 10)
 			{
-				if (player.x > egg.x + egg.w - 10)
-				{
-					player.s_x += colSpeed;
-				}
-				
-				else if (player.x + player.w < egg.x + 10)
-				{
-					player.s_x -= colSpeed;
-				}
-				
 				if (player.y > egg.y + egg.h - 10)
 				{
 					player.s_y += colSpeed;
 				}
 
-				else if (player.y < egg.y + 10)
+				if (player.y < egg.y + 10)
 				{
 					player.s_y -= colSpeed;
+				}
+
+				if (player.x > egg.x + egg.w - 10)
+				{
+					player.s_x += colSpeed;
+				}
+
+				if (player.x + player.w < egg.x + 10)
+				{
+					player.s_x -= colSpeed;
 				}
 			}
 
@@ -340,11 +342,22 @@ int main(int argc, char* args[])
 			}
 
 			feetTime += feetSpeed * deltaTime;
-			if (feetTime >= 0.15 && (fabsf(player.speedX) > 100 || fabsf(player.speedY) > 100))
+			
+			if (feetTime >= 0.1 && (fabsf(player.speedX) > 100 || fabsf(player.speedY) > 100))
 			{
 				feetTime = 0;
-				Entity foot(henFeetTex, 8, 8, player.x + player.w / 2 + rand() % 21 - 10, player.y + player.h / 2 + rand() % 21 - 10, 16, 16, true);
-				foot.angle = player.angle;
+				
+				Entity foot(henFeetTex, 8, 8, player.x + player.w / 2 /* + rand() % 21 - 10*/, player.y + player.h / 2 /*+ rand() % 21 - 10*/, 16, 16, true);
+				if (henFeetRightLeft == 0)
+				{
+					foot.angle = player.angle;
+					henFeetRightLeft = 1;
+				}
+				if (henFeetRightLeft == 1)
+				{
+					foot.angle = player.angle + 180;
+					henFeetRightLeft = 0;
+				}
 				foot.alpha = 155;
 				feet.push_back(foot);
 			}
