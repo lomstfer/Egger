@@ -134,6 +134,11 @@ int main(int argc, char* args[])
 	SDL_Texture* henTexList [8] = {henTex0, henTex1, henTex2, henTex3, henTex4, henTex5, henTex6 ,henTex7};
 	Player player(henTex0, winW/2, winH/2 + 200, 32, 48);
 
+	SDL_Texture* henFeetTex = IMG_LoadTexture(renderer, "assets/henfoot.png");
+	std::vector<Entity> feet;
+	float feetTime = 0;
+	float feetSpeed = 1;
+
 	float colSpeed = 1;
 
 	float score = 0;
@@ -324,7 +329,7 @@ int main(int argc, char* args[])
 					if (collideCenter(enemies[i].rect, egg.rect))
 					{
 						enemies.erase(enemies.begin() + i);
-						score -= 20;
+						score -= 30;
 					}
 					else if (collideCenter(player.rect, enemies[i].rect))
 					{
@@ -332,6 +337,16 @@ int main(int argc, char* args[])
 						score += 10;
 					}
 				}
+			}
+
+			feetTime += feetSpeed * deltaTime;
+			if (feetTime >= 0.15 && (fabsf(player.speedX) > 100 || fabsf(player.speedY) > 100))
+			{
+				feetTime = 0;
+				Entity foot(henFeetTex, 8, 8, player.x + player.w / 2 + rand() % 21 - 10, player.y + player.h / 2 + rand() % 21 - 10, 16, 16, true);
+				foot.angle = player.angle;
+				foot.alpha = 155;
+				feet.push_back(foot);
 			}
 
 			scoreAdder *= 1.0001f;
@@ -342,12 +357,6 @@ int main(int argc, char* args[])
 				score = 0;
 			}
 
-			scoreText.text = std::to_string(ftint(score));
-			scoreText.update();
-			
-			player.update(winW, winH, deltaTime, keys);
-			player.noExplore(winW, winH);
-
 			if (gameTime >= 60)
 			{
 				enemies.clear();
@@ -356,6 +365,11 @@ int main(int argc, char* args[])
 				menu = true;
 			}
 
+			scoreText.text = std::to_string(ftint(score));
+			scoreText.update();
+			
+			player.update(winW, winH, deltaTime, keys);
+			player.noExplore(winW, winH);
 			updateNow = SDL_GetTicks();
 			updateTime = updateNow - updateLast;
 
@@ -364,7 +378,17 @@ int main(int argc, char* args[])
 			SDL_SetRenderDrawColor(renderer, r, g, b, 255);
 			SDL_RenderClear(renderer);
 			for (int i = 0; i < enemies.size(); ++i)
+			{
 				enemies[i].render(renderer);
+			}
+			for (int i = 0; i < feet.size(); ++i)
+			{
+				SDL_SetTextureAlphaMod(feet[i].tex, feet[i].alpha);
+				SDL_RenderCopyEx(renderer, feet[i].tex, &feet[i].srcRect, &feet[i].rect, feet[i].angle, NULL, SDL_FLIP_NONE);
+				feet[i].alpha -= 100 * deltaTime;
+				if (feet[i].alpha <= 0)
+					feet.erase(feet.begin() + i);
+			}
 			player.render(henTexList, renderer);
 			egg.render(renderer);
 			scoreText.render();
