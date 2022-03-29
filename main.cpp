@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include <SDL_mixer.h>
 #include <iostream>
 #include <vector>
 #include <string>
@@ -72,7 +73,7 @@ int main(int argc, char* args[])
 	int updateElementLogs = 0;
 
 	// init SDL
-	SDL_Init(SDL_INIT_VIDEO);
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 	IMG_Init(IMG_INIT_PNG);
 	TTF_Init();
 
@@ -82,6 +83,12 @@ int main(int argc, char* args[])
 	SDL_SetWindowIcon(window, icon);
 	SDL_ShowCursor(SDL_DISABLE);
 	SDL_RenderSetLogicalSize(renderer, winW, winH);
+
+	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+
+	Mix_Music* cricketsBg = Mix_LoadMUS("assets/cricketsBg.wav");
+	Mix_Chunk* ratDieSound = Mix_LoadWAV("assets/ratDie.wav");
+	Mix_Chunk* ratAttackEggSound = Mix_LoadWAV("assets/eggAttack.wav");
 
 	int r = 50;
 	int g = 50;
@@ -101,6 +108,9 @@ int main(int argc, char* args[])
 	Text pressFText("press F to change between windowed and fullscreen", 
 				 30, {255, 255, 255, 255}, "assets/CascadiaCode.ttf", winW / 2, winH - 100, true, renderer);
 
+	Text difficultyText("DIFFICULTY: ",
+		30, { 255, 255, 255, 255 }, "assets/CascadiaCode.ttf", winW / 2, winH / 2 + 100, true, renderer);
+
 	int fullscreenMode = -1;
 
 	bool gameLoad = false;
@@ -108,7 +118,7 @@ int main(int argc, char* args[])
 	SDL_Texture* eggTexture = IMG_LoadTexture(renderer, "assets/egg.png");
 	Entity egg(eggTexture, 16, 16, winW/2, winH/2, 64, 64, true);
 
-	SDL_Texture* enemyTexture = IMG_LoadTexture(renderer, "assets/enemy.png");
+	SDL_Texture* enemyTexture = IMG_LoadTexture(renderer, "assets/rat1.png");
 	std::vector<Entity> enemies;
 	float enemyEggDistance = 0;
 	float eggXdist = 0;
@@ -134,7 +144,7 @@ int main(int argc, char* args[])
 	SDL_Texture* henTexList [8] = {henTex0, henTex1, henTex2, henTex3, henTex4, henTex5, henTex6 ,henTex7};
 	Player player(henTex0, winW/2, winH/2 + 200, 32, 48);
 
-	SDL_Texture* henFeetTex = IMG_LoadTexture(renderer, "assets/henfoot1.png");
+	SDL_Texture* henFootLeftTex = IMG_LoadTexture(renderer, "assets/henFootLeft.png");
 	std::vector<Entity> feet;
 	float feetTime = 0;
 	float feetSpeed = 1;
@@ -151,6 +161,8 @@ int main(int argc, char* args[])
 	bool win = false;
 
 	int henFeetRightLeft = rand() % 2;
+
+	int difficulty = 0;
 
 	// program running
 	while (gameRunning)
@@ -171,8 +183,19 @@ int main(int argc, char* args[])
 					case SDLK_f:
 						fullscreenMode *= -1;
 						break;
+					case SDLK_RIGHT:
+						difficulty += 1;
+						break;
+					case SDLK_LEFT:
+						difficulty -= 1;
+						break;
 					}
 				}
+			}
+
+			if (Mix_PlayingMusic())
+			{
+				Mix_PauseMusic();
 			}
 			
 			if (fullscreenMode == -1)
@@ -193,6 +216,9 @@ int main(int argc, char* args[])
 			pressFText.render();
 			fullScreenText.update();
 			fullScreenText.render();
+			difficultyText.text = "ARROWS TO INCREASE DIFFICULTY: " + std::to_string(difficulty);
+			difficultyText.update();
+			difficultyText.render();
 
 			if (ftint(score) > ftint(highscore))
 			{
@@ -226,7 +252,7 @@ int main(int argc, char* args[])
 				player.rotationSpeed = 0;
 				score = 0;
 				scoreAdder = 1;
-				enSpeedMulti = 0;
+				enSpeedMulti = 1 + difficulty;
 			}
 
 			SDL_RenderPresent(renderer);
@@ -272,6 +298,15 @@ int main(int argc, char* args[])
 
 			// UPDATE
 			updateLast = SDL_GetTicks();
+			if (!Mix_PlayingMusic())
+			{
+				Mix_PlayMusic(cricketsBg, -1);
+			}
+			else if (Mix_PausedMusic())
+			{
+				Mix_ResumeMusic();
+			}
+
 			while (player.s_x + player.w > egg.x + 10 &&
 				player.s_x < egg.x + egg.w - 10 &&
 				player.s_y + player.h > egg.y + 10 &&
@@ -310,34 +345,39 @@ int main(int argc, char* args[])
 				if (sideX != 0 || sideY != 0)
 				{
 					// emplace back only takes the arguments for the type of which it holds
-					enemies.emplace_back(enemyTexture, 8, 8, winW / 2 + rand() % 100 - 50 + (rand() % 300 + 600) * sideX, winH / 2 + rand() % 100 - 50 + (rand() % 300 + 400) * sideY, 16, 16, true);
+					enemies.emplace_back(enemyTexture, 5, 11, winW / 2 + rand() % 100 - 50 + (rand() % 300 + 600) * sideX, winH / 2 + rand() % 100 - 50 + (rand() % 300 + 400) * sideY, 10, 22, true);
 				}
 			}
 			
 			enSpeedMulti += scoreAdder * deltaTime / 10;
-			if (enemies.size() > 0)
-			{
-				for (int i = 0; i < enemies.size(); ++i)
-				{
-					eggXdist = enemies[i].cx - egg.cx;
-					eggYdist = enemies[i].cy - egg.cy;
-					enemyEggDistance = sqrt(pow(eggXdist, 2) + pow(eggYdist, 2));
-					enSpeedX = eggXdist / enemyEggDistance;
-					enSpeedY = eggYdist / enemyEggDistance;
-					enemies[i].x -= enSpeedX * deltaTime * 30 * enSpeedMulti;
-					enemies[i].y -= enSpeedY * deltaTime * 30 * enSpeedMulti;
-					enemies[i].moveUpdate();
 
-					if (collideCenter(enemies[i].rect, egg.rect))
-					{
-						enemies.erase(enemies.begin() + i);
-						score -= 30;
-					}
-					else if (collideCenter(player.rect, enemies[i].rect))
-					{
-						enemies.erase(enemies.begin() + i);
-						score += 10;
-					}
+			for (int i = 0; i < enemies.size(); ++i)
+			{
+				eggXdist = enemies[i].cx - egg.cx;
+				eggYdist = enemies[i].cy - egg.cy;
+				enemyEggDistance = sqrt(pow(eggXdist, 2) + pow(eggYdist, 2));
+				enSpeedX = eggXdist / enemyEggDistance;
+				enSpeedY = eggYdist / enemyEggDistance;
+				enemies[i].x -= enSpeedX * deltaTime * 30 * enSpeedMulti;
+				enemies[i].y -= enSpeedY * deltaTime * 30 * enSpeedMulti;
+				enemies[i].angle = atan(eggYdist / eggXdist) * 180 / M_PI;
+				if (eggXdist > 0)
+					enemies[i].angle -= 90;
+				if (eggXdist < 0)
+					enemies[i].angle += 90;
+				enemies[i].moveUpdate();
+
+				if (collideCenter(enemies[i].rect, egg.rect))
+				{
+					Mix_PlayChannel(-1, ratAttackEggSound, 0);
+					enemies.erase(enemies.begin() + i);
+					score -= 30;
+				}
+				else if (collideCenter(player.rect, enemies[i].rect))
+				{
+					Mix_PlayChannel(-1, ratDieSound, 0);
+					enemies.erase(enemies.begin() + i);
+					score += 10;
 				}
 			}
 
@@ -347,19 +387,23 @@ int main(int argc, char* args[])
 			{
 				feetTime = 0;
 				
-				Entity foot(henFeetTex, 8, 8, player.x + player.w / 2 /* + rand() % 21 - 10*/, player.y + player.h / 2 /*+ rand() % 21 - 10*/, 16, 16, true);
 				if (henFeetRightLeft == 0)
 				{
-					foot.angle = player.angle;
 					henFeetRightLeft = 1;
+					Entity foot(henFootLeftTex, 8, 8, player.x + player.w / 2 + rand() % 21 - 10, player.y + player.h / 2 + rand() % 21 - 10, 16, 8, true);
+					foot.angle = player.angle;
+					foot.alpha = 155;
+					feet.push_back(foot);
 				}
-				if (henFeetRightLeft == 1)
+				else if (henFeetRightLeft == 1)
 				{
-					foot.angle = player.angle + 180;
 					henFeetRightLeft = 0;
+					Entity foot(henFootLeftTex, 8, 8, player.x + player.w / 2 + rand() % 21 - 10, player.y + player.h / 2 + rand() % 21 - 10, 16, 8, true);
+					foot.angle = player.angle + 180;
+					foot.alpha = 155;
+					feet.push_back(foot);
 				}
-				foot.alpha = 155;
-				feet.push_back(foot);
+				
 			}
 
 			scoreAdder *= 1.0001f;
@@ -392,7 +436,7 @@ int main(int argc, char* args[])
 			SDL_RenderClear(renderer);
 			for (int i = 0; i < enemies.size(); ++i)
 			{
-				enemies[i].render(renderer);
+				SDL_RenderCopyEx(renderer, enemies[i].tex, &enemies[i].srcRect, &enemies[i].rect, enemies[i].angle, NULL, SDL_FLIP_NONE);
 			}
 			for (int i = 0; i < feet.size(); ++i)
 			{
@@ -410,11 +454,20 @@ int main(int argc, char* args[])
 			renderNow = SDL_GetTicks();
 			renderTime = renderNow - renderLast;
 			updateElementLogs += 1;
-			if (updateElementLogs % 10 == 0)
-				std::cout << "INPUT: " + std::to_string(ftint(inputTime)) + " | UPDATE: " + std::to_string(ftint(updateTime)) + " | RENDER: " + std::to_string(ftint(renderTime)) + " (TICKS)" << std::endl;
+			//if (updateElementLogs % 10 == 0)
+				//std::cout << "INPUT: " + std::to_string(ftint(inputTime)) + " | UPDATE: " + std::to_string(ftint(updateTime)) + " | RENDER: " + std::to_string(ftint(renderTime)) + " (TICKS)" << std::endl;
 		}
 	}
 	SDL_DestroyWindow(window);
+	Mix_FreeChunk(ratDieSound);
+	Mix_FreeChunk(ratAttackEggSound);
+	Mix_FreeMusic(cricketsBg);
+
+	ratDieSound = nullptr;
+	ratAttackEggSound = nullptr;
+	cricketsBg = nullptr;
+
+	Mix_Quit();
 	SDL_Quit();
 
 	return 0;
