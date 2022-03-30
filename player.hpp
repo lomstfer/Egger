@@ -24,7 +24,6 @@ public:
     float currentFrame;
 
     float speed;
-	float speedP;
 	float rotationForce;
 	float animationSpeed;
 	float speedX;
@@ -33,11 +32,6 @@ public:
 
     float angle;
 	float angleRadians;
-
-	// speed calculation things
-	float posnow;
-	float posdiff;
-	float speedo;
 
 	// used to be able of slowing down the rotationspeed to make a smoothing
 	float rotSpeed;

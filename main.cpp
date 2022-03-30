@@ -267,8 +267,8 @@ int main(int argc, char* args[])
 				b = 103;
 				scoreText.color = {255, 255, 255, 255};
 				
-				player.s_x = winW / 2 - player.w / 2;
-				player.s_y = winH / 2 - 200 - player.h / 2;
+				player.s_x = winW / 2.0f - player.w / 2;
+				player.s_y = winH / 2.0f - 200 - player.h / 2;
 				player.speedX = 0;
 				player.speedY = 0;
 				player.angle = 0;

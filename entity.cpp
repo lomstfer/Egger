@@ -30,6 +30,11 @@ Entity::Entity(SDL_Texture* texture, int source_width, int source_height, float 
     rect.y = ftint(y);
     rect.w = ftint(w);
     rect.h = ftint(h);
+
+    alpha = 255;
+    angle = 0;
+    speedX = 0;
+    speedY = 0;
 }
 
 void Entity::render(SDL_Renderer* renderer)

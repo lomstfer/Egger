@@ -4,7 +4,6 @@ class Entity
 {
 public:
     SDL_Texture* tex;
-    SDL_Surface* surf;
     SDL_Rect srcRect;
     SDL_Rect rect;
     bool center;
@@ -14,7 +13,6 @@ public:
     float cy;
     float w;
     float h;
-    float speed;
     float speedX;
     float speedY;
     float alpha;

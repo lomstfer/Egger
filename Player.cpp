@@ -49,13 +49,12 @@ Player::Player(SDL_Texture *ptex, int px, int py, float pw, float ph)
 
     speed = 300.0f;
 	rotSpeed = 1500.0f;
-	speedP = speed;
 	rotationForce = 0.05f;
 	speedX = 0.0f;
 	speedY = 0.0f;
-    damp = 0.001;
+    damp = 0.001f;
     angle = 0.0f;
-	angleRadians = angle * M_PI / 180;
+	angleRadians = angle * M_PI / 180.0f;
 
 	// used to be able of slowing down the rotationspeed to make a smoothing
 	rotationSpeed = 0.0f;
@@ -118,34 +117,29 @@ void Player::render(SDL_Texture* textureList [8], SDL_Renderer* renderer)
 	SDL_RenderCopyEx(renderer, tex, &srcRect, &rect, angle, NULL, SDL_FLIP_NONE);
 }
 
-void Player::resetSpeed()
-{
-	speed = speedP;
-}
-
 void Player::noExplore(int winW, int winH)
 {
 	// left stop
-	if (s_x + rect.w/4 <= 0)
+	if (s_x + rect.w/4.0f <= 0)
 	{
-		s_x = 0 - rect.w/4;
+		s_x = 0 - rect.w/4.0f;
 	}
 
 	// right stop
-	if (s_x + rect.w - rect.w/4 >= winW)
+	if (s_x + rect.w - rect.w/4.0f >= winW)
 	{
-		s_x = winW - rect.w + rect.w/4;
+		s_x = winW - rect.w + rect.w/4.0f;
 	}
 
 	// up stop
-	if (s_y + rect.h/4 <= 0)
+	if (s_y + rect.h/4.0f <= 0)
 	{
-		s_y = 0 - rect.h/4;
+		s_y = 0 - rect.h/4.0f;
 	}
 
 	// down stop
-	if (s_y + rect.h - rect.h/4 >= winH )
+	if (s_y + rect.h - rect.h/4.0f >= winH )
 	{
-		s_y = winH - rect.h + rect.h/4;
+		s_y = winH - rect.h + rect.h/4.0f;
 	}
 }
