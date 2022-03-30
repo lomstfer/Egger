@@ -1,25 +1,28 @@
 ﻿  main.cpp
-C:\Fiverr\main.cpp(119,45): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Fiverr\main.cpp(119,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Fiverr\main.cpp(255,22): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Fiverr\main.cpp(267,16): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Fiverr\main.cpp(278,50): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Fiverr\main.cpp(279,47): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Fiverr\main.cpp(289,40): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Fiverr\main.cpp(294,39): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Fiverr\main.cpp(297,25): warning C4244: '=': conversion from 'Uint64' to 'double', possible loss of data
-C:\Fiverr\main.cpp(336,22): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Fiverr\main.cpp(352,43): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Fiverr\main.cpp(358,28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Fiverr\main.cpp(361,47): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
-C:\Fiverr\main.cpp(362,47): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
-C:\Fiverr\main.cpp(363,56): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Fiverr\main.cpp(384,26): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Fiverr\main.cpp(410,24): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Fiverr\main.cpp(431,27): warning C4244: '=': conversion from 'Uint64' to 'double', possible loss of data
-C:\Fiverr\main.cpp(443,48): warning C4244: 'argument': conversion from 'float' to 'Uint8', possible loss of data
-C:\Fiverr\main.cpp(445,26): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
-C:\Fiverr\main.cpp(455,27): warning C4244: '=': conversion from 'Uint64' to 'double', possible loss of data
+C:\Fiverr\main.cpp(124,45): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Fiverr\main.cpp(124,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Fiverr\main.cpp(278,22): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Fiverr\main.cpp(290,16): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Fiverr\main.cpp(301,50): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Fiverr\main.cpp(302,47): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Fiverr\main.cpp(312,40): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Fiverr\main.cpp(317,39): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Fiverr\main.cpp(320,25): warning C4244: '=': conversion from 'Uint64' to 'double', possible loss of data
+C:\Fiverr\main.cpp(359,22): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Fiverr\main.cpp(375,43): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Fiverr\main.cpp(381,28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Fiverr\main.cpp(384,47): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+C:\Fiverr\main.cpp(385,47): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+C:\Fiverr\main.cpp(386,56): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Fiverr\main.cpp(411,26): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Fiverr\main.cpp(437,24): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Fiverr\main.cpp(459,27): warning C4244: '=': conversion from 'Uint64' to 'double', possible loss of data
+C:\Fiverr\main.cpp(471,48): warning C4244: 'argument': conversion from 'float' to 'Uint8', possible loss of data
+C:\Fiverr\main.cpp(473,26): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+C:\Fiverr\main.cpp(483,27): warning C4244: '=': conversion from 'Uint64' to 'double', possible loss of data
+C:\Fiverr\main.cpp(486,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Fiverr\main.cpp(486,102): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Fiverr\main.cpp(486,154): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\xmemory(680,68): warning C4244: 'argument': conversion from '_Ty' to 'float', possible loss of data
           with
           [
@@ -44,5 +47,5 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.3110
           [
               _Ty=int
           ]
-C:\Fiverr\main.cpp(348): message : see reference to function template instantiation 'void std::vector<Entity,std::allocator<Entity>>::emplace_back<SDL_Texture*&,int,int,int,int,int,int,bool>(SDL_Texture *&,int &&,int &&,int &&,int &&,int &&,int &&,bool &&)' being compiled
+C:\Fiverr\main.cpp(371): message : see reference to function template instantiation 'void std::vector<Entity,std::allocator<Entity>>::emplace_back<SDL_Texture*&,int,int,int,int,int,int,bool>(SDL_Texture *&,int &&,int &&,int &&,int &&,int &&,int &&,bool &&)' being compiled
   Project1.vcxproj -> C:\Fiverr\x64\Debug\Project1.exe

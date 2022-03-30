@@ -7,6 +7,7 @@
 #include <string>
 #include <stdlib.h>
 #include <math.h>
+#include <fstream>
 
 #include "Player.hpp"
 #include "Entity.hpp"
@@ -89,6 +90,7 @@ int main(int argc, char* args[])
 	Mix_Music* cricketsBg = Mix_LoadMUS("assets/cricketsBg.wav");
 	Mix_Chunk* ratDieSound = Mix_LoadWAV("assets/ratDie.wav");
 	Mix_Chunk* ratAttackEggSound = Mix_LoadWAV("assets/eggAttack.wav");
+	Mix_Chunk* winTrumpetSound = Mix_LoadWAV("assets/winTrumpet.wav");
 
 	int r = 50;
 	int g = 50;
@@ -106,10 +108,13 @@ int main(int argc, char* args[])
 	Text fullScreenText("FULLSCREEN ON", 
 				 50, {255, 255, 255, 255}, "assets/CascadiaCode.ttf", winW / 2, winH / 2 - 40, true, renderer);
 	Text pressFText("press F to change between windowed and fullscreen", 
-				 30, {255, 255, 255, 255}, "assets/CascadiaCode.ttf", winW / 2, winH - 100, true, renderer);
+				 20, {255, 255, 255, 255}, "assets/CascadiaCode.ttf", winW / 2, winH - 50, true, renderer);
 
 	Text difficultyText("DIFFICULTY: ",
 		30, { 255, 255, 255, 255 }, "assets/CascadiaCode.ttf", winW / 2, winH / 2 + 100, true, renderer);
+
+	Text controlText("Control the player with the arrow keys",
+		30, { 255, 255, 255, 255 }, "assets/CascadiaCode.ttf", winW / 2, winH - 100, true, renderer);
 
 	int fullscreenMode = -1;
 
@@ -156,6 +161,7 @@ int main(int argc, char* args[])
 	float scoreAdder = 1;
 	Text scoreText("HIGHSCORE: " + std::to_string(ftint(score)), 
 				   50, {255, 255, 255, 255}, "assets/CascadiaCode.ttf", winW/2, 20, true, renderer);
+	
 
 	float gameTime = 0;
 	bool win = false;
@@ -163,6 +169,11 @@ int main(int argc, char* args[])
 	int henFeetRightLeft = rand() % 2;
 
 	int difficulty = 0;
+
+	std::string text = "";
+	SDL_StartTextInput();
+
+	std::ofstream logfile("logs.txt");
 
 	// program running
 	while (gameRunning)
@@ -191,6 +202,14 @@ int main(int argc, char* args[])
 						break;
 					}
 				}
+				if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_BACKSPACE && text.length() > 0)
+				{
+					text = text.substr(0, text.length() - 1);
+				}
+				else if (event.type == SDL_TEXTINPUT)
+				{
+					text += event.text.text;
+				}
 			}
 
 			if (Mix_PlayingMusic())
@@ -216,9 +235,11 @@ int main(int argc, char* args[])
 			pressFText.render();
 			fullScreenText.update();
 			fullScreenText.render();
-			difficultyText.text = "ARROWS TO INCREASE DIFFICULTY: " + std::to_string(difficulty);
+			difficultyText.text = "ARROW KEYS TO INCREASE DIFFICULTY: " + std::to_string(difficulty);
 			difficultyText.update();
 			difficultyText.render();
+			controlText.update();
+			controlText.render();
 
 			if (ftint(score) > ftint(highscore))
 			{
@@ -238,6 +259,8 @@ int main(int argc, char* args[])
 			{
 				menu = false;
 				game = true;
+				logfile << "GAME STARTED" << std::endl;
+
 				gameTime = 0;
 				r = 71;
 				g = 209;
@@ -372,12 +395,16 @@ int main(int argc, char* args[])
 					Mix_PlayChannel(-1, ratAttackEggSound, 0);
 					enemies.erase(enemies.begin() + i);
 					score -= 30;
+					logfile << "A RAT GOT TO THE EGG" << std::endl;
+					Log("A RAT COLLIDED WITH THE EGG")
 				}
 				else if (collideCenter(player.rect, enemies[i].rect))
 				{
 					Mix_PlayChannel(-1, ratDieSound, 0);
 					enemies.erase(enemies.begin() + i);
 					score += 10;
+					logfile << "A RAT GOT KILLED" << std::endl;
+					Log("A RAT COLLIDED WITH THE PLAYER")
 				}
 			}
 
@@ -416,6 +443,7 @@ int main(int argc, char* args[])
 
 			if (gameTime >= 60)
 			{
+				Mix_PlayChannel(-1, winTrumpetSound, 0);
 				enemies.clear();
 				win = true;
 				game = false;
@@ -454,8 +482,8 @@ int main(int argc, char* args[])
 			renderNow = SDL_GetTicks();
 			renderTime = renderNow - renderLast;
 			updateElementLogs += 1;
-			//if (updateElementLogs % 10 == 0)
-				//std::cout << "INPUT: " + std::to_string(ftint(inputTime)) + " | UPDATE: " + std::to_string(ftint(updateTime)) + " | RENDER: " + std::to_string(ftint(renderTime)) + " (TICKS)" << std::endl;
+			if (updateElementLogs % 100 == 0)
+				std::cout << "INPUT: " + std::to_string(ftint(inputTime)) + " | UPDATE: " + std::to_string(ftint(updateTime)) + " | RENDER: " + std::to_string(ftint(renderTime)) + " (TICKS)" << std::endl;
 		}
 	}
 	SDL_DestroyWindow(window);
@@ -469,6 +497,9 @@ int main(int argc, char* args[])
 
 	Mix_Quit();
 	SDL_Quit();
+
+	logfile << "EXIT" << std::endl;
+	logfile.close();
 
 	return 0;
 }
