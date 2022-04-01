@@ -54,7 +54,7 @@ Player::Player(SDL_Texture *ptex, int px, int py, float pw, float ph)
 	speedY = 0.0f;
     damp = 0.001f;
     angle = 0.0f;
-	angleRadians = angle * M_PI / 180.0f;
+	angleRadians = angle * float(M_PI) / 180.0f;
 
 	// used to be able of slowing down the rotationspeed to make a smoothing
 	rotationSpeed = 0.0f;
@@ -84,31 +84,31 @@ void Player::update(int winW, int winH, double deltaTime, const Uint8 *keys)
 	}
 
 	// slow down x speed
-	speedX *= pow(damp, deltaTime);
+	speedX *= float(pow(damp, deltaTime));
 	if (fabsf(speedX) < 0.1)
 	{
 		speedX = 0;
 	}
 
 	// slow down y speed
-	speedY *= pow(damp, deltaTime);
+	speedY *= float(pow(damp, deltaTime));
 	if (fabsf(speedY) < 0.1)
 	{
 		speedY = 0;
 	}
 
-	angle += rotationSpeed * deltaTime;
-	rotationSpeed *= pow(damp, deltaTime);
+	angle += rotationSpeed * float(deltaTime);
+	rotationSpeed *= float(pow(damp, deltaTime));
 	if (fabsf(rotationSpeed) < 0.1)
 	{
 		rotationSpeed = 0;
 	}
 
 	// add values to simulated position
-	s_x += speedX * deltaTime;
-	s_y += speedY * deltaTime;
-	rect.x = x;
-	rect.y = y;
+	s_x += speedX * float(deltaTime);
+	s_y += speedY * float(deltaTime);
+	rect.x = ftint(x);
+	rect.y = ftint(y);
 }
 
 void Player::render(SDL_Texture* textureList [8], SDL_Renderer* renderer)

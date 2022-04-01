@@ -11,8 +11,8 @@ Entity::Entity(SDL_Texture* texture, int source_width, int source_height, float 
 
     x = position_x;
     y = position_y;
-    w = width;
-    h = height;
+    w = float(width);
+    h = float(height);
     if (center)
     {
         x -= w / 2;
@@ -40,11 +40,6 @@ Entity::Entity(SDL_Texture* texture, int source_width, int source_height, float 
 void Entity::render(SDL_Renderer* renderer)
 {
     SDL_RenderCopy(renderer, tex, &srcRect, &rect);
-}
-
-void Entity::update()
-{
-
 }
 
 void Entity::moveUpdate()
