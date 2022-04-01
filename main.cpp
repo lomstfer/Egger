@@ -228,7 +228,7 @@ int main(int argc, char* args[])
 				SDL_SetWindowFullscreen(window, SDL_WINDOW_SHOWN);
 			}
 
-			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+			SDL_SetRenderDrawColor(renderer, r, g, b, 255);
 			SDL_RenderClear(renderer);
 			titleText.render();
 			enterText.render();

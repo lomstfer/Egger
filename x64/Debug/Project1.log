@@ -1,10 +1,1 @@
-﻿  Player.cpp
-C:\Fiverr\Player.cpp(57,30): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Fiverr\Player.cpp(94,15): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
-C:\Fiverr\Player.cpp(100,25): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Fiverr\Player.cpp(101,22): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
-C:\Fiverr\Player.cpp(108,16): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Fiverr\Player.cpp(109,16): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Fiverr\Player.cpp(110,11): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Fiverr\Player.cpp(111,11): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-  Project1.vcxproj -> C:\Fiverr\x64\Debug\Project1.exe
+﻿  Project1.vcxproj -> C:\programmeringosv\fiverr\Project1\x64\Debug\Project1.exe
