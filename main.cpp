@@ -448,6 +448,9 @@ int main(int argc, char* args[])
 				win = true;
 				game = false;
 				menu = true;
+				r = 50;
+				g = 50;
+				b = 50;
 			}
 
 			scoreText.text = std::to_string(ftint(score));
