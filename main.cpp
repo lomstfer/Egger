@@ -92,6 +92,12 @@ int main(int argc, char* args[])
 	Mix_Chunk* ratAttackEggSound = Mix_LoadWAV("assets/eggAttack.wav");
 	Mix_Chunk* winTrumpetSound = Mix_LoadWAV("assets/winTrumpet.wav");
 
+	SDL_Texture* eggerBgTex = IMG_LoadTexture(renderer, "assets/eggerbg.png");
+	Entity eggerBg = Entity(eggerBgTex, 100, 56, 0, 0, winW, winH, false);
+
+	SDL_Texture* eggereggBgTex = IMG_LoadTexture(renderer, "assets/eggereggbg.png");
+	Entity eggereggBg = Entity(eggereggBgTex, 100, 56, 0, 0, winW, winH, false);
+
 	int r = 50;
 	int g = 50;
 	int b = 50;
@@ -101,20 +107,20 @@ int main(int argc, char* args[])
 	const Uint8 *keys = SDL_GetKeyboardState(NULL);
 
 	bool menu = true;
-	Text titleText("EGGER", 100, {255, 255, 255, 255}, "assets/CascadiaCode.ttf", winW / 2, winH/2 - 200, true, renderer);
+	Text titleText("EGGER", 100, {0, 0, 0, 255}, "assets/CascadiaCode.ttf", winW / 2, winH/2 - 200, true, renderer);
 
 	Text enterText("ENTER TO START - ESCAPE TO EXIT", 
-				 50, {255, 255, 255, 255}, "assets/CascadiaCode.ttf", winW / 2, winH / 2, true, renderer);
+				 50, {0, 0, 0, 255}, "assets/CascadiaCode.ttf", winW / 2, winH / 2, true, renderer);
 	Text fullScreenText("FULLSCREEN ON", 
-				 50, {255, 255, 255, 255}, "assets/CascadiaCode.ttf", winW / 2, winH / 2 - 40, true, renderer);
+				 50, {0, 0, 0, 255}, "assets/CascadiaCode.ttf", winW / 2, winH / 2 - 40, true, renderer);
 	Text pressFText("press F to change between windowed and fullscreen", 
-				 20, {255, 255, 255, 255}, "assets/CascadiaCode.ttf", winW / 2, winH - 50, true, renderer);
+				 20, {0, 0, 0, 255}, "assets/CascadiaCode.ttf", winW / 2, winH - 50, true, renderer);
 
 	Text difficultyText("DIFFICULTY: 1",
-		30, { 255, 255, 255, 255 }, "assets/CascadiaCode.ttf", winW / 2, winH / 2 + 100, true, renderer);
+		30, { 0, 0, 0, 255 }, "assets/CascadiaCode.ttf", winW / 2, winH / 2 + 100, true, renderer);
 
 	Text controlText("Control the player with the arrow keys",
-		30, { 255, 255, 255, 255 }, "assets/CascadiaCode.ttf", winW / 2, winH - 100, true, renderer);
+		30, { 0, 0, 0, 255 }, "assets/CascadiaCode.ttf", winW / 2, winH - 100, true, renderer);
 
 	int fullscreenMode = -1;
 
@@ -234,6 +240,7 @@ int main(int argc, char* args[])
 
 			SDL_SetRenderDrawColor(renderer, r, g, b, 255);
 			SDL_RenderClear(renderer);
+			eggerBg.render(renderer);
 			titleText.render();
 			enterText.render();
 			pressFText.render();
@@ -469,6 +476,7 @@ int main(int argc, char* args[])
 			renderLast = SDL_GetTicks();
 			SDL_SetRenderDrawColor(renderer, r, g, b, 255);
 			SDL_RenderClear(renderer);
+			eggereggBg.render(renderer);
 			for (int i = 0; i < enemies.size(); ++i)
 			{
 				SDL_RenderCopyEx(renderer, enemies[i].tex, &enemies[i].srcRect, &enemies[i].rect, enemies[i].angle, NULL, SDL_FLIP_NONE);
