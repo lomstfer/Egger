@@ -110,7 +110,7 @@ int main(int argc, char* args[])
 	Text pressFText("press F to change between windowed and fullscreen", 
 				 20, {255, 255, 255, 255}, "assets/CascadiaCode.ttf", winW / 2, winH - 50, true, renderer);
 
-	Text difficultyText("DIFFICULTY: ",
+	Text difficultyText("DIFFICULTY: 1",
 		30, { 255, 255, 255, 255 }, "assets/CascadiaCode.ttf", winW / 2, winH / 2 + 100, true, renderer);
 
 	Text controlText("Control the player with the arrow keys",
@@ -168,7 +168,7 @@ int main(int argc, char* args[])
 
 	int henFeetRightLeft = rand() % 2;
 
-	int difficulty = 0;
+	int difficulty = 1;
 
 	std::string text = "";
 	SDL_StartTextInput();
@@ -196,9 +196,13 @@ int main(int argc, char* args[])
 						break;
 					case SDLK_RIGHT:
 						difficulty += 1;
+						if (difficulty > 10)
+							difficulty = 10;
 						break;
 					case SDLK_LEFT:
 						difficulty -= 1;
+						if (difficulty < 1)
+							difficulty = 1;
 						break;
 					}
 				}
