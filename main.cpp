@@ -47,6 +47,8 @@ bool collideCenter(SDL_Rect obj, SDL_Rect cobj)
 
 int main(int argc, char* args[])
 {
+	const char* TITLE = "Student name; Module; Student Number; EGGER";
+
 	bool gameRunning = true;
 	SDL_Event event;
 
@@ -78,7 +80,7 @@ int main(int argc, char* args[])
 	IMG_Init(IMG_INIT_PNG);
 	TTF_Init();
 
-	SDL_Window* window = SDL_CreateWindow("Egger", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, winW, winH, SDL_WINDOW_FULLSCREEN_DESKTOP);
+	SDL_Window* window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, winW, winH, SDL_WINDOW_FULLSCREEN_DESKTOP);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	SDL_Surface *icon = IMG_Load("assets/icon.png");
 	SDL_SetWindowIcon(window, icon);
@@ -88,6 +90,7 @@ int main(int argc, char* args[])
 	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
 
 	Mix_Music* cricketsBg = Mix_LoadMUS("assets/cricketsBg.wav");
+	Mix_Music* flaBg = Mix_LoadMUS("assets/fla.wav");
 	Mix_Chunk* ratDieSound = Mix_LoadWAV("assets/ratDie.wav");
 	Mix_Chunk* ratAttackEggSound = Mix_LoadWAV("assets/eggAttack.wav");
 	Mix_Chunk* winTrumpetSound = Mix_LoadWAV("assets/winTrumpet.wav");
@@ -184,12 +187,28 @@ int main(int argc, char* args[])
 	// program running
 	while (gameRunning)
 	{
+		if (win == false) {
+			Mix_PlayMusic(flaBg, -1);
+		}
+
+		gameTime = 5;
+
 		// menu loop
 		while (menu)
 		{
 			deltaLast = deltaNow;
 			deltaNow = SDL_GetPerformanceCounter();
 			deltaTime = (double)(deltaNow - deltaLast) * 100 / (double)SDL_GetPerformanceFrequency();
+
+			if (gameTime > 1 && win == true) {
+				gameTime -= deltaTime / 100.0f;
+			}
+
+			if (gameTime < 1 && win == true) {
+				Mix_FadeInMusic(flaBg, -1, 2000);
+				gameTime = 1.0f;
+			}
+
 			while (SDL_PollEvent(&event))
 			{
 				ifquit(menu, gameRunning, event, window);
@@ -220,11 +239,6 @@ int main(int argc, char* args[])
 				{
 					text += event.text.text;
 				}
-			}
-
-			if (Mix_PlayingMusic())
-			{
-				Mix_PauseMusic();
 			}
 			
 			if (fullscreenMode == -1)
@@ -287,6 +301,7 @@ int main(int argc, char* args[])
 				score = 0;
 				scoreAdder = 1;
 				enSpeedMulti = 1 + difficulty;
+				Mix_PlayMusic(cricketsBg, -1);
 			}
 
 			SDL_RenderPresent(renderer);
@@ -306,6 +321,8 @@ int main(int argc, char* args[])
 			{
 				ifquit(game, gameRunning, event, window);
 			}
+
+			//Mix_FadeOutChannel(4, 1000);
 
 			if (keys[SDL_SCANCODE_UP])
 			{
@@ -332,14 +349,7 @@ int main(int argc, char* args[])
 
 			// UPDATE
 			updateLast = SDL_GetTicks();
-			if (!Mix_PlayingMusic())
-			{
-				Mix_PlayMusic(cricketsBg, -1);
-			}
-			else if (Mix_PausedMusic())
-			{
-				Mix_ResumeMusic();
-			}
+
 
 			while (player.s_x + player.w > egg.x + 10 &&
 				player.s_x < egg.x + egg.w - 10 &&
@@ -462,6 +472,7 @@ int main(int argc, char* args[])
 				r = 50;
 				g = 50;
 				b = 50;
+				Mix_PauseMusic();
 			}
 
 			scoreText.text = std::to_string(ftint(score));
@@ -497,17 +508,21 @@ int main(int argc, char* args[])
 			renderNow = SDL_GetTicks();
 			renderTime = renderNow - renderLast;
 			updateElementLogs += 1;
-			if (updateElementLogs % 100 == 0)
+			if (updateElementLogs % 100 == 0) {
 				std::cout << "INPUT: " + std::to_string(ftint(inputTime)) + " | UPDATE: " + std::to_string(ftint(updateTime)) + " | RENDER: " + std::to_string(ftint(renderTime)) + " (TICKS)" << std::endl;
+				Log("score: " + std::to_string(ftint(score)));
+			}
 		}
 	}
 	SDL_DestroyWindow(window);
 	Mix_FreeChunk(ratDieSound);
 	Mix_FreeChunk(ratAttackEggSound);
+	Mix_FreeMusic(flaBg);
 	Mix_FreeMusic(cricketsBg);
 
 	ratDieSound = nullptr;
 	ratAttackEggSound = nullptr;
+	flaBg = nullptr;
 	cricketsBg = nullptr;
 
 	Mix_Quit();
