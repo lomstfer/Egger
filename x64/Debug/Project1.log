@@ -1,1 +1,52 @@
-﻿  Project1.vcxproj -> C:\programmeringosv\fiverr\Project1\x64\Debug\Project1.exe
+﻿  main.cpp
+C:\programmeringosv\fiverr\Project1\main.cpp(134,45): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(134,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(205,27): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(304,22): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(317,16): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(330,50): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(331,47): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(341,40): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(346,39): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(349,25): warning C4244: '=': conversion from 'Uint64' to 'double', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(381,22): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(397,43): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(403,28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(406,47): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(407,47): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(408,56): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(433,26): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(459,24): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(485,27): warning C4244: '=': conversion from 'Uint64' to 'double', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(498,48): warning C4244: 'argument': conversion from 'float' to 'Uint8', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(500,26): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(510,27): warning C4244: '=': conversion from 'Uint64' to 'double', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(513,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(513,102): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\programmeringosv\fiverr\Project1\main.cpp(513,154): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.30.30705\include\xmemory(681,68): warning C4244: 'argument': conversion from '_Ty' to 'float', possible loss of data
+          with
+          [
+              _Ty=int
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.30.30705\include\vector(592): message : see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,SDL_Texture*&,int,int,int,int,int,int,bool>(_Alloc &,_Objty *const ,SDL_Texture *&,int &&,int &&,int &&,int &&,int &&,int &&,bool &&)' being compiled
+          with
+          [
+              _Alloc=std::allocator<Entity>,
+              _Ty=Entity,
+              _Objty=Entity
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.30.30705\include\vector(597): message : see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,SDL_Texture*&,int,int,int,int,int,int,bool>(_Alloc &,_Objty *const ,SDL_Texture *&,int &&,int &&,int &&,int &&,int &&,int &&,bool &&)' being compiled
+          with
+          [
+              _Alloc=std::allocator<Entity>,
+              _Ty=Entity,
+              _Objty=Entity
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.30.30705\include\vector(610): message : see reference to function template instantiation 'void std::vector<Entity,std::allocator<Entity>>::_Emplace_back_with_unused_capacity<SDL_Texture*&,_Ty,_Ty,_Ty,_Ty,_Ty,_Ty,bool>(SDL_Texture *&,_Ty &&,_Ty &&,_Ty &&,_Ty &&,_Ty &&,_Ty &&,bool &&)' being compiled
+          with
+          [
+              _Ty=int
+          ]
+C:\programmeringosv\fiverr\Project1\main.cpp(393): message : see reference to function template instantiation 'void std::vector<Entity,std::allocator<Entity>>::emplace_back<SDL_Texture*&,int,int,int,int,int,int,bool>(SDL_Texture *&,int &&,int &&,int &&,int &&,int &&,int &&,bool &&)' being compiled
+  Project1.vcxproj -> C:\programmeringosv\fiverr\Project1\x64\Debug\Project1.exe

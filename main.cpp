@@ -47,7 +47,7 @@ bool collideCenter(SDL_Rect obj, SDL_Rect cobj)
 
 int main(int argc, char* args[])
 {
-	// Title of the gamw window, change here and it will be changed when you start the game
+	// Title of the game window, change here and it will be changed when the game starts 
 	const char* TITLE = "Student name; Module; Student Number; EGGER";
 
 	bool gameRunning = true;
@@ -57,7 +57,7 @@ int main(int argc, char* args[])
 	int winW = 1280;
 	int winH = 720;
 
-	// deltaTime, used to make some things not go too fast because you ran the program fast (time between frames)
+	// deltaTime, used to make some things not go too fast because the program ran fast (time between frames)
 	Uint64 deltaNow = SDL_GetPerformanceCounter();
 	Uint64 deltaLast = 0;
 	double deltaTime = 0;
